@@ -1,0 +1,107 @@
+---
+import Icon from './Icon.astro';
+import { locations, defaultLocation } from '@/data/locations';
+
+interface Props {
+  compact?: boolean;
+  label?: string;
+  id?: string;
+  name?: string;
+  placement?: 'top' | 'bottom';
+}
+
+const {
+  compact = false,
+  label = 'Shop by location',
+  id = `location-${Math.random().toString(36).slice(2, 9)}`,
+  name,
+  placement = 'bottom',
+} = Astro.props;
+const selected = locations.find((location) => location.slug === defaultLocation) ?? locations[0];
+---
+
+<div
+  class:list={[
+    'location-selector relative w-full',
+    compact && 'location-selector--compact',
+    placement === 'top' && 'location-selector--top',
+  ]}
+  data-location-selector
+>
+  <span class="location-selector__label" id={`${id}-label`}>
+    <Icon name="pin" size={16} />
+    {label}
+  </span>
+
+  <button
+    class="location-selector__trigger group flex w-full items-center gap-3 rounded-full border border-slate-200 bg-white px-3.5 py-2.5 text-left shadow-sm transition hover:border-wos-teal hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wos-teal"
+    type="button"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    aria-controls={`${id}-listbox`}
+    aria-labelledby={`${id}-label ${id}-value`}
+    data-location-trigger
+  >
+    <span
+      class="location-selector__trigger-icon grid size-9 shrink-0 place-items-center rounded-full bg-cyan-50 text-wos-teal"
+    >
+      <Icon name="pin" size={17} />
+    </span>
+    <span class="min-w-0 flex-1">
+      <strong
+        class="block truncate text-sm font-extrabold text-slate-900"
+        id={`${id}-value`}
+        data-location-current>{selected.city}</strong
+      >
+      <small class="block truncate text-xs font-semibold text-slate-500" data-location-current-region
+        >{selected.province} · {selected.region}</small
+      >
+    </span>
+    <span class="location-selector__chevron text-slate-500 transition-transform group-aria-expanded:rotate-180">
+      <Icon name="chevron" size={17} />
+    </span>
+  </button>
+
+  <div
+    class="location-selector__menu absolute z-[250] w-full min-w-[18rem] overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl"
+    id={`${id}-listbox`}
+    role="listbox"
+    aria-labelledby={`${id}-label`}
+    data-location-menu
+    hidden
+  >
+    <div class="location-selector__menu-heading px-3 pb-2 pt-1">
+      <span>Choose a showroom</span>
+      <small>Inventory and inquiry routing update instantly.</small>
+    </div>
+    <div class="location-selector__options">
+      {
+        locations.map((location) => (
+          <button
+            class="location-selector__option group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-cyan-50 focus-visible:bg-cyan-50 focus-visible:outline-none"
+            type="button"
+            role="option"
+            aria-selected={location.slug === defaultLocation ? 'true' : 'false'}
+            data-location-option={location.slug}
+            tabindex="-1"
+          >
+            <span class="location-selector__option-icon grid size-9 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-600 transition group-hover:bg-white group-hover:text-wos-teal">
+              <Icon name="pin" size={16} />
+            </span>
+            <span class="min-w-0 flex-1">
+              <strong>
+                {location.city}, {location.province}
+              </strong>
+              <small>{location.region}</small>
+            </span>
+            <span class="location-selector__check" aria-hidden="true">
+              <Icon name="check" size={17} />
+            </span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  {name && <input type="hidden" name={name} value={defaultLocation} data-location-input />}
+</div>

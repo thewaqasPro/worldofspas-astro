@@ -1,0 +1,293 @@
+---
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import { site } from '@/data/site';
+import { locations } from '@/data/locations';
+import '@/styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title = `${site.name} | Hot Tubs, Swim Spas & Backyard Wellness`,
+  description = site.description,
+  image = 'https://images.unsplash.com/photo-1670140274653-659c76f0f8e1?auto=format&fit=crop&w=1600&q=80',
+  noindex = false,
+  structuredData,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: site.name,
+  url: Astro.site,
+  telephone: site.phoneDisplay,
+  areaServed: ['Alberta', 'British Columbia', 'Saskatchewan'],
+  department: locations.map((location) => ({
+    '@type': 'Store',
+    name: `${site.name} ${location.city}`,
+    address: `${location.address}, ${location.postalCode}`,
+    telephone: location.phone,
+  })),
+};
+const schemas = structuredData
+  ? [orgSchema, ...(Array.isArray(structuredData) ? structuredData : [structuredData])]
+  : [orgSchema];
+---
+
+<!doctype html>
+<html lang="en" data-location="calgary">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#061b2b" />
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schemas)} />
+  </head>
+  <body>
+    <Header />
+    <main id="main-content"><slot /></main>
+    <Footer />
+    <script>
+      // @ts-nocheck
+      const WOS_LOCATIONS = [
+        { slug: 'calgary', city: 'Calgary', province: 'AB', region: 'Southern Alberta' },
+        { slug: 'kelowna', city: 'Kelowna', province: 'BC', region: 'Okanagan' },
+        { slug: 'edmonton', city: 'Edmonton', province: 'AB', region: 'Northern Alberta' },
+        { slug: 'red-deer', city: 'Red Deer', province: 'AB', region: 'Central Alberta' },
+        { slug: 'saskatoon', city: 'Saskatoon', province: 'SK', region: 'Saskatchewan' },
+      ];
+
+      const isValidLocation = (slug) => WOS_LOCATIONS.some((location) => location.slug === slug);
+      const getLocation = (slug) =>
+        WOS_LOCATIONS.find((location) => location.slug === slug) || WOS_LOCATIONS[0];
+      const getSelectedLocation = () => {
+        const params = new URLSearchParams(window.location.search);
+        const queryLocation = params.get('location');
+        if (queryLocation && isValidLocation(queryLocation)) return queryLocation;
+        const storedLocation = window.localStorage.getItem('wos-location');
+        return storedLocation && isValidLocation(storedLocation) ? storedLocation : 'calgary';
+      };
+
+      const updateInventory = () => {
+        const activeLocation = document.documentElement.dataset.location || 'calgary';
+        const brandFilter = document.querySelector('[data-brand-filter]')?.value || 'all';
+        const sortFilter = document.querySelector('[data-sort-filter]')?.value || 'featured';
+        const cards = [...document.querySelectorAll('[data-location-card]')];
+        let visible = 0;
+
+        cards.forEach((card) => {
+          const availableLocations = (card.getAttribute('data-available-locations') || '').split(' ');
+          const brand = card.getAttribute('data-brand');
+          const available = availableLocations.includes(activeLocation);
+          const brandMatches = brandFilter === 'all' || brand === brandFilter;
+          const show = available && brandMatches;
+          card.hidden = !show;
+          const sortWrapper = card.parentElement?.parentElement?.matches('[data-sortable-grid]')
+            ? card.parentElement
+            : null;
+          if (sortWrapper && sortWrapper !== card) sortWrapper.hidden = !show;
+          card.dataset.locationAvailable = available ? 'true' : 'false';
+          if (show) visible += 1;
+          const text = card.querySelector('[data-availability-text]');
+          if (text)
+            text.textContent = available
+              ? `Available in ${getLocation(activeLocation).city}`
+              : `Not shown in ${getLocation(activeLocation).city}`;
+        });
+
+        document.querySelectorAll('[data-sortable-grid]').forEach((grid) => {
+          [...grid.children]
+            .sort((a, b) => {
+              if (sortFilter === 'name') return (a.dataset.name || '').localeCompare(b.dataset.name || '');
+              if (sortFilter === 'clearance')
+                return (b.dataset.clearance === 'true' ? 1 : 0) - (a.dataset.clearance === 'true' ? 1 : 0);
+              return (b.dataset.featured === 'true' ? 1 : 0) - (a.dataset.featured === 'true' ? 1 : 0);
+            })
+            .forEach((child) => grid.appendChild(child));
+        });
+
+        document
+          .querySelectorAll('[data-visible-count]')
+          .forEach((node) => (node.textContent = String(visible)));
+        document.querySelectorAll('[data-product-availability]').forEach((node) => {
+          const available = (node.getAttribute('data-available-locations') || '')
+            .split(' ')
+            .includes(activeLocation);
+          node.classList.toggle('is-available', available);
+          const text = node.querySelector('[data-product-availability-text]');
+          if (text) {
+            text.textContent = available
+              ? `Available or displayable through ${getLocation(activeLocation).city}`
+              : `Ask ${getLocation(activeLocation).city} about ordering or transfer options`;
+          }
+        });
+      };
+
+      const setLocation = (slug, push = false) => {
+        const location = getLocation(slug);
+        window.localStorage.setItem('wos-location', location.slug);
+        document.documentElement.dataset.location = location.slug;
+
+        document
+          .querySelectorAll('[data-location-label]')
+          .forEach((node) => (node.textContent = location.city));
+        document
+          .querySelectorAll('[data-location-current]')
+          .forEach((node) => (node.textContent = location.city));
+        document
+          .querySelectorAll('[data-location-current-region]')
+          .forEach((node) => (node.textContent = `${location.province} · ${location.region}`));
+        document.querySelectorAll('[data-location-input]').forEach((input) => (input.value = location.slug));
+        document.querySelectorAll('[data-form-location]').forEach((select) => {
+          if (select.value !== location.slug) select.value = location.slug;
+        });
+        document.querySelectorAll('[data-location-option]').forEach((option) => {
+          const selected = option.getAttribute('data-location-option') === location.slug;
+          option.setAttribute('aria-selected', String(selected));
+          option.tabIndex = selected ? 0 : -1;
+        });
+        document.querySelectorAll('[data-location-button]').forEach((button) => {
+          button.classList.toggle('is-active', button.getAttribute('data-location-button') === location.slug);
+        });
+
+        updateInventory();
+        if (push) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('location', location.slug);
+          window.history.replaceState({}, '', url);
+        }
+        window.dispatchEvent(new CustomEvent('wos:location-change', { detail: { location: location.slug } }));
+      };
+
+      const locationSelectors = [...document.querySelectorAll('[data-location-selector]')];
+      const closeLocationSelector = (selector, returnFocus = false) => {
+        const trigger = selector?.querySelector('[data-location-trigger]');
+        const menu = selector?.querySelector('[data-location-menu]');
+        if (!(trigger instanceof HTMLButtonElement) || !(menu instanceof HTMLElement)) return;
+        trigger.setAttribute('aria-expanded', 'false');
+        menu.hidden = true;
+        if (returnFocus) trigger.focus();
+      };
+      const closeLocationSelectors = (except) => {
+        locationSelectors.forEach((selector) => {
+          if (selector !== except) closeLocationSelector(selector);
+        });
+      };
+      const openLocationSelector = (selector, focusSelected = false) => {
+        const trigger = selector?.querySelector('[data-location-trigger]');
+        const menu = selector?.querySelector('[data-location-menu]');
+        if (!(trigger instanceof HTMLButtonElement) || !(menu instanceof HTMLElement)) return;
+        closeLocationSelectors(selector);
+        trigger.setAttribute('aria-expanded', 'true');
+        menu.hidden = false;
+        if (focusSelected) {
+          window.requestAnimationFrame(() =>
+            menu.querySelector('[data-location-option][aria-selected="true"]')?.focus(),
+          );
+        }
+      };
+
+      locationSelectors.forEach((selector) => {
+        const trigger = selector.querySelector('[data-location-trigger]');
+        const menu = selector.querySelector('[data-location-menu]');
+        const options = [...selector.querySelectorAll('[data-location-option]')];
+        if (!(trigger instanceof HTMLButtonElement) || !(menu instanceof HTMLElement)) return;
+
+        trigger.addEventListener('click', () => {
+          const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+          isOpen ? closeLocationSelector(selector) : openLocationSelector(selector);
+        });
+        trigger.addEventListener('keydown', (event) => {
+          if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+          event.preventDefault();
+          openLocationSelector(selector, true);
+        });
+        options.forEach((option) => {
+          option.addEventListener('click', () => {
+            setLocation(option.getAttribute('data-location-option') || 'calgary', true);
+            closeLocationSelector(selector, true);
+          });
+        });
+        menu.addEventListener('keydown', (event) => {
+          const currentOptions = [...menu.querySelectorAll('[data-location-option]')];
+          const currentIndex = currentOptions.indexOf(document.activeElement);
+          let nextIndex = currentIndex;
+          if (event.key === 'ArrowDown')
+            nextIndex = (currentIndex + 1 + currentOptions.length) % currentOptions.length;
+          else if (event.key === 'ArrowUp')
+            nextIndex = (currentIndex - 1 + currentOptions.length) % currentOptions.length;
+          else if (event.key === 'Home') nextIndex = 0;
+          else if (event.key === 'End') nextIndex = currentOptions.length - 1;
+          else if (event.key === 'Escape') {
+            event.preventDefault();
+            closeLocationSelector(selector, true);
+            return;
+          } else return;
+          event.preventDefault();
+          currentOptions[nextIndex]?.focus();
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!event.target.closest('[data-location-selector]')) closeLocationSelectors();
+      });
+      document.querySelectorAll('[data-form-location]').forEach((select) => {
+        select.addEventListener('change', () => setLocation(select.value, true));
+      });
+      document.querySelectorAll('[data-location-button]').forEach((button) => {
+        button.addEventListener('click', () =>
+          window.localStorage.setItem('wos-location', button.getAttribute('data-location-button')),
+        );
+      });
+      window.addEventListener('wos:inventory-filter', updateInventory);
+      window.WOSLocation = { get: getSelectedLocation, set: setLocation, locations: WOS_LOCATIONS };
+      setLocation(getSelectedLocation(), false);
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const revealItems = document.querySelectorAll('[data-reveal]');
+      if (reducedMotion || !('IntersectionObserver' in window)) {
+        revealItems.forEach((item) => item.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -40px' },
+        );
+        revealItems.forEach((item) => observer.observe(item));
+      }
+    </script>
+  </body>
+</html>

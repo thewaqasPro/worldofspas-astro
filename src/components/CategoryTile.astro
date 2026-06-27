@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+interface Props {
+  label: string;
+  summary: string;
+  href: string;
+  icon?:
+    | 'wave'
+    | 'leaf'
+    | 'spark'
+    | 'energy'
+    | 'shield'
+    | 'cart'
+    | 'calendar'
+    | 'tools'
+    | 'code'
+    | 'pin'
+    | 'mail';
+}
+const { label, summary, href, icon = 'wave' } = Astro.props;
+---
+
+<a class="category-tile" href={href} data-reveal>
+  <span class="category-tile__icon"><Icon name={icon} /></span>
+  <span>
+    <strong>{label}</strong>
+    <small>{summary}</small>
+  </span>
+  <Icon name="arrow" size={18} />
+</a>

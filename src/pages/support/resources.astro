@@ -1,0 +1,54 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+const resources = [
+  ['Hot Tub vs Swim Spa', 'Compare footprint, fitness, hydrotherapy, cost, and everyday use.'],
+  ['How to Choose a Hot Tub', 'A showroom-friendly guide for seating, jets, placement, and ownership.'],
+  ['Water Care Basics', 'Weekly maintenance, testing, filters, and seasonal refresh habits.'],
+  ['Sauna + Cold Plunge Planning', 'Build a complete contrast-therapy area with site and safety notes.'],
+  ['Delivery Checklist', 'Access, foundation, electrical, crane considerations, and final placement.'],
+  ['Winter Ownership', 'Cold-weather habits for Western Canadian spa owners.'],
+];
+---
+
+<Layout
+  title="Resources | World of Spas"
+  description="Buying guides and owner resources for hot tubs, swim spas, water care, delivery planning, saunas, and cold plunge tubs."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs">
+        <a href="/">Home</a><span>/</span><a href="/support">Support</a><span>/</span><span>Resources</span>
+      </div><span class="eyebrow eyebrow--light">Resources</span><h1>
+        Guides that support search, sales, and ownership.
+      </h1><p class="page-hero__copy">
+        This route is ready for blog/resource expansion and can be connected to Markdown, a CMS, or API later.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Planning guides" title="Reusable resource cards." /><div class="resource-grid">
+        {
+          resources.map(([title, description]) => (
+            <article class="resource-card">
+              <>
+                <div>
+                  <>
+                    <span class="resource-card__meta">Guide</span>
+                    <h3>{title}</h3>
+                    <p>{description}</p>
+                  </>
+                </div>
+                <a class="arrow-link" href="/contact">
+                  Request guide <Icon name="arrow" size={18} />
+                </a>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

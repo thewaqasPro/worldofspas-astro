@@ -1,0 +1,55 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { getItemsByCategory } from '@/data/inventory';
+const items = getItemsByCategory('cold-plunge-tubs');
+---
+
+<Layout
+  title="Cold Plunge Tubs | World of Spas"
+  description="Shop cold plunge tubs for recovery and contrast therapy."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Cold Plunge Tubs</span></div><span
+        class="eyebrow eyebrow--light">Recovery</span
+      ><h1>Cold plunge tubs for contrast therapy and recovery.</h1><p class="page-hero__copy">
+        Add cold immersion to your hot tub or sauna routine and filter options by showroom availability.
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#inventory">Shop cold tubs <Icon name="arrow" size={18} /></a><a
+          class="button button--outline-light"
+          href="/support/resources">Learn about contrast therapy</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Cold immersion"
+        title="A simple, powerful addition to the wellness routine."
+        description="This page is built from the same reusable category and inventory components as hot tubs, swim spas, saunas, and accessory pages."
+      />
+    </div>
+  </section>
+  <section class="section section--sand" id="inventory">
+    <div class="container">
+      <InventoryToolbar resultLabel="cold plunge tubs" /><div class="product-grid" data-sortable-grid>
+        {
+          items.map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

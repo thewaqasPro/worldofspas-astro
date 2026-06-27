@@ -1,0 +1,55 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { componentDocs } from '@/data/components';
+export function getStaticPaths() {
+  return componentDocs.map((component) => ({ params: { component: component.slug }, props: { component } }));
+}
+const { component } = Astro.props;
+---
+
+<Layout title={`${component.title} Component | World of Spas Astro`} description={component.description}>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs">
+        <a href="/">Home</a><span>/</span><a href="/components">Components</a><span>/</span><span
+          >{component.title}</span
+        >
+      </div><span class="eyebrow eyebrow--light">Component</span><h1>{component.title}</h1><p
+        class="page-hero__copy"
+      >
+        {component.description}
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid grid--2" style="align-items:start">
+      <div>
+        <SectionHeading
+          eyebrow="Source"
+          title="Linked source path."
+          description="Open this file in the project to reuse or extend the component."
+        /><div class="component-example">
+          <div class="component-example__top">
+            <span><Icon name="code" size={18} /> Source file</span><code>{component.source}</code>
+          </div><h3>Usage</h3><pre
+            style="white-space:pre-wrap;background:var(--sand-2);padding:18px;border-radius:14px;overflow:auto"><code>{component.usage}</code></pre>
+        </div>
+      </div><div>
+        <SectionHeading eyebrow="Reuse for" title="Where this component fits." /><div class="location-list">
+          {
+            component.reusableFor.map((item) => (
+              <article class="location-card">
+                <>
+                  <h3>{item}</h3>
+                  <p>Use this component instead of creating a one-off page section.</p>
+                </>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

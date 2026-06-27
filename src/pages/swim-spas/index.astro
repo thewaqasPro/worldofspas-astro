@@ -1,0 +1,74 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { swimSpaBrands } from '@/data/brands';
+import { getItemsByCategory } from '@/data/inventory';
+import { lifestyleImages } from '@/data/site';
+const items = getItemsByCategory('swim-spas');
+---
+
+<Layout
+  title="Swim Spas for Sale | World of Spas"
+  description="Shop swim spas for fitness, family recreation, and recovery from Master Spas and Dynasty Spas."
+>
+  <section class="page-hero">
+    <div class="page-hero__media">
+      <img src={lifestyleImages.heroSwim} alt="Modern backyard swim spa and pool inspiration" />
+    </div><div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Swim Spas</span></div><span
+        class="eyebrow eyebrow--light">Swim spas</span
+      ><h1>Fitness, family fun, and hydrotherapy in one backyard system.</h1><p class="page-hero__copy">
+        Compare Master Spas and Dynasty swim spa options and filter available models by your nearest showroom.
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#inventory">Shop swim spas <Icon name="arrow" size={18} /></a><a
+          class="button button--outline-light"
+          href="/support/book-appointment">Book wet test</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Swim spa brands"
+        title="Performance current, hydrotherapy, and year-round movement."
+      /><div class="grid grid--2">
+        {
+          swimSpaBrands.map((brand) => (
+            <a
+              class="brand-card"
+              style={`--brand:${brand.color};--brand-text:${brand.textColor};width:auto;min-height:180px`}
+              href={`/swim-spas/${brand.slug}`}
+            >
+              <>
+                <span class="brand-card__wordmark">{brand.name}</span>
+                <small>{brand.description}</small>
+                <Icon name="arrow" size={18} />
+              </>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand" id="inventory">
+    <div class="container">
+      <InventoryToolbar resultLabel="swim spas" /><div class="product-grid" data-sortable-grid>
+        {
+          items.map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

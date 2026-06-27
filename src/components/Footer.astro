@@ -1,0 +1,73 @@
+---
+import BrandMark from './BrandMark.astro';
+import Icon from './Icon.astro';
+import { hotTubBrands, swimSpaBrands } from '@/data/brands';
+import { productCategories } from '@/data/inventory';
+import { locations } from '@/data/locations';
+import { site, supportLinks } from '@/data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-cta">
+      <div>
+        <span class="eyebrow eyebrow--light">Ready to compare brands?</span><h2>
+          Choose a showroom. Build a smarter backyard plan.
+        </h2>
+      </div>
+      <div class="footer-cta__actions">
+        <a class="button button--light" href="/locations">Find a location <Icon name="arrow" size={18} /></a><a
+          class="button button--outline-light"
+          href="/support/book-appointment">Book appointment</a
+        >
+      </div>
+    </div>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <BrandMark light /><p>{site.description}</p><a class="footer-contact" href={site.phoneHref}
+          ><Icon name="phone" size={18} /> {site.phoneDisplay}</a
+        ><a class="footer-contact" href={`mailto:${site.email}`}><Icon name="mail" size={18} /> {site.email}</a>
+      </div>
+      <div>
+        <h3>Hot tubs</h3>{hotTubBrands.map((brand) => <a href={`/hot-tubs/${brand.slug}`}>{brand.name}</a>)}
+      </div>
+      <div>
+        <h3>Swim spas</h3>{
+          swimSpaBrands.map((brand) => <a href={`/swim-spas/${brand.slug}`}>{brand.name}</a>)
+        }<a href="/cold-plunge-tubs">Cold plunge tubs</a><a href="/saunas">Saunas</a>
+      </div>
+      <div>
+        <h3>Products</h3>{
+          productCategories
+            .filter((cat) => !['hot-tubs', 'swim-spas', 'cold-plunge-tubs', 'saunas'].includes(cat.slug))
+            .map((cat) => <a href={cat.href}>{cat.label}</a>)
+        }
+      </div>
+      <div>
+        <h3>Support</h3>{supportLinks.map((link) => <a href={link.href}>{link.label}</a>)}<a href="/financing"
+          >Financing</a
+        ><a href="/components">Component Library</a>
+      </div>
+    </div>
+    <div class="footer-locations">
+      {
+        locations.map((location) => (
+          <a href={`/locations/${location.slug}`}>
+            <Icon name="pin" size={15} /> {location.city}, {location.province}
+          </a>
+        ))
+      }
+    </div>
+    <div class="footer-bottom">
+      <p>
+        © {year} World of Spas. Demo rebuild; replace placeholder copy, imagery, pricing, and legal details before
+        launch.
+      </p><div>
+        <a href="/privacy">Privacy</a><a href="/terms-of-service">Terms</a><a href="/accessibility"
+          >Accessibility</a
+        >
+      </div>
+    </div>
+  </div>
+</footer>

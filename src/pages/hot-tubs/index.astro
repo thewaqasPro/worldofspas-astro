@@ -1,0 +1,75 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { hotTubBrands } from '@/data/brands';
+import { getItemsByCategory } from '@/data/inventory';
+import { lifestyleImages } from '@/data/site';
+const items = getItemsByCategory('hot-tubs');
+---
+
+<Layout
+  title="Hot Tubs for Sale | World of Spas"
+  description="Shop hot tubs from Master Spas, Cal Spas, Dynasty Spas, DreamMaker Spas, and CozyPro across Western Canada."
+>
+  <section class="page-hero">
+    <div class="page-hero__media">
+      <img src={lifestyleImages.heroHotTub} alt="Outdoor hot tub with premium backyard setting" />
+    </div><div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Hot Tubs</span></div><span
+        class="eyebrow eyebrow--light">Hot tubs</span
+      ><h1>Compare premium hot tub brands in one place.</h1><p class="page-hero__copy">
+        Browse models by brand and selected showroom availability. Calgary, Kelowna, Edmonton, Red Deer, and
+        Saskatoon inventory updates as shoppers choose a location.
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#inventory">Shop models <Icon name="arrow" size={18} /></a><a
+          class="button button--outline-light"
+          href="/support/book-appointment">Book appointment</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Brands" title="Hot tub brands carried by World of Spas." /><div
+        class="grid grid--5"
+        style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px"
+      >
+        {
+          hotTubBrands.map((brand) => (
+            <a
+              class="brand-card"
+              style={`--brand:${brand.color};--brand-text:${brand.textColor};width:auto;min-height:140px`}
+              href={`/hot-tubs/${brand.slug}`}
+            >
+              <>
+                <span class="brand-card__wordmark">{brand.name}</span>
+                <small>{brand.description}</small>
+                <Icon name="arrow" size={18} />
+              </>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand" id="inventory">
+    <div class="container">
+      <InventoryToolbar resultLabel="hot tubs" /><div class="product-grid" data-sortable-grid>
+        {
+          items.map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

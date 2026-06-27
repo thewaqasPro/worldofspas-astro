@@ -1,0 +1,58 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ComponentExample from '@/components/ComponentExample.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { componentDocs } from '@/data/components';
+---
+
+<Layout
+  title="Component Library | World of Spas Astro"
+  description="Reusable custom Astro components for the World of Spas rebuild."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Component Library</span></div><span
+        class="eyebrow eyebrow--light">Developer handoff</span
+      ><h1>Reusable components, linked to source files.</h1><p class="page-hero__copy">
+        Every custom component has a dedicated route, usage notes, and a direct source path so future pages can
+        be assembled without duplicating markup.
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#components">Browse components <Icon name="arrow" size={18} /></a
+        ><a class="button button--outline-light" href="/products">See components in use</a>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="components">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Reusable components"
+        title="Build new pages from these blocks."
+        description="The project avoids one-off page markup wherever possible. Catalog cards, filters, forms, maps, sliders, and navigation are all shared components."
+      /><div class="grid grid--3">
+        {
+          componentDocs.map((doc) => (
+            <ComponentExample
+              title={doc.title}
+              source={doc.source}
+              href={`/components/${doc.slug}`}
+              description={doc.description}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Page generation"
+        title="Add content in data files first."
+        description="New products belong in src/data/inventory.ts, new brands in src/data/brands.ts, new locations in src/data/locations.ts, and new component docs in src/data/components.ts."
+      /><div class="notice">
+        For production, consider replacing static data files with a CMS, ERP feed, Shopify API, or custom
+        inventory endpoint while preserving the same component props.
+      </div>
+    </div>
+  </section>
+</Layout>

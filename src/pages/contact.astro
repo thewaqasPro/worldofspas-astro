@@ -1,0 +1,51 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { locations } from '@/data/locations';
+---
+
+<Layout
+  title="Contact | World of Spas"
+  description="Contact World of Spas for pricing, appointments, service, parts, and product questions."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Contact</span></div><span
+        class="eyebrow eyebrow--light">Contact</span
+      ><h1>Tell us what you are shopping for.</h1><p class="page-hero__copy">
+        The location selector keeps inquiry routing aligned with the customer’s nearest showroom.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid grid--2" style="align-items:start">
+      <div>
+        <SectionHeading
+          eyebrow="Start here"
+          title="One form for sales, service, and appointment requests."
+          description="Use hidden context fields to identify which page generated the inquiry."
+        /><div class="location-list">
+          {
+            locations.map((location) => (
+              <article class="location-card">
+                <>
+                  <h3>{location.city}</h3>
+                  <p>
+                    {location.address}
+                    <br />
+                    {location.phone}
+                  </p>
+                  <a class="arrow-link" href={location.phoneHref}>
+                    <Icon name="phone" size={17} /> Call {location.city}
+                  </a>
+                </>
+              </article>
+            ))
+          }
+        </div>
+      </div><InquiryForm title="Send a message" context="Contact page" compact />
+    </div>
+  </section>
+</Layout>

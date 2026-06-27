@@ -1,0 +1,50 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+---
+
+<Layout
+  title="Financing | World of Spas"
+  description="Financing information for hot tubs, swim spas, saunas, cold plunge tubs, and backyard wellness purchases."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Financing</span></div><span
+        class="eyebrow eyebrow--light">Financing</span
+      ><h1>Make the backyard plan easier to start.</h1><p class="page-hero__copy">
+        A financing route for promotional banners, event campaigns, and appointment follow-up. Replace
+        placeholder financing copy with lender-approved language before launch.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Financing flow" title="Built for seasonal offers and campaigns." /><div
+        class="benefit-grid"
+      >
+        <article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="spark" /></span><h3>Event-ready</h3><p>
+            Use this page for seasonal savings, clearance events, and new model year promotions.
+          </p>
+        </article><article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="shield" /></span><h3>Compliance friendly</h3><p>
+            Keep terms, OAC language, and lender requirements in one editable route.
+          </p>
+        </article><article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="pin" /></span><h3>Location routing</h3><p>
+            Send applications and questions to the shopper’s selected showroom.
+          </p>
+        </article><article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="calendar" /></span><h3>Sales enablement</h3><p>
+            Pair financing with showroom consultations and wet-test appointments.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand">
+    <div class="container"><InquiryForm title="Ask about financing" context="Financing page" /></div>
+  </section>
+</Layout>

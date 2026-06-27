@@ -1,0 +1,455 @@
+---
+import BrandMark from './BrandMark.astro';
+import Icon from './Icon.astro';
+import LocationSelector from './LocationSelector.astro';
+import { hotTubBrands, swimSpaBrands } from '@/data/brands';
+import { productCategories } from '@/data/inventory';
+import { locations } from '@/data/locations';
+import { site, supportLinks } from '@/data/site';
+
+const path = Astro.url.pathname;
+const products = productCategories.filter((category) => !['hot-tubs', 'swim-spas'].includes(category.slug));
+---
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+<div class="top-strip">
+  <div class="container top-strip__inner">
+    <p>Western Canada’s premium hot tub, swim spa, and backyard wellness dealer</p>
+    <div>
+      <a href="/financing">Apply for financing</a>
+      <a href="/support/parts-and-service">Parts & service</a>
+      <a href={site.phoneHref}><Icon name="phone" size={15} /> {site.phoneDisplay}</a>
+    </div>
+  </div>
+</div>
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <BrandMark />
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <div class="nav-item nav-item--mega" data-nav-item>
+        <button type="button" class="nav-button" data-nav-button aria-expanded="false" aria-haspopup="true">
+          Shop <Icon name="chevron" size={15} />
+        </button>
+        <div class="mega-menu" data-nav-menu>
+          <div class="mega-menu__feature">
+            <span>Shop by showroom</span>
+            <h3>Check products near <span data-location-label>Calgary</span>.</h3>
+            <p>
+              Availability badges, catalog results, product pages, and inquiry routing all follow the selected
+              showroom.
+            </p>
+            <LocationSelector id="desktop-mega-location" compact label="Selected location" />
+          </div>
+          <div class="mega-menu__columns">
+            <div>
+              <h4>Hot tubs by brand</h4>
+              {
+                hotTubBrands.map((brand) => (
+                  <a href={`/hot-tubs/${brand.slug}`}>
+                    {brand.name}
+                    <Icon name="arrow" size={16} />
+                  </a>
+                ))
+              }
+              <a class="mega-menu__all-link" href="/hot-tubs"
+                >View all hot tubs<Icon name="arrow" size={16} /></a
+              >
+            </div>
+            <div>
+              <h4>Swim spas</h4>
+              {
+                swimSpaBrands.map((brand) => (
+                  <a href={`/swim-spas/${brand.slug}`}>
+                    {brand.name}
+                    <Icon name="arrow" size={16} />
+                  </a>
+                ))
+              }
+              <a class="mega-menu__all-link" href="/swim-spas"
+                >View all swim spas<Icon name="arrow" size={16} /></a
+              >
+            </div>
+            <div>
+              <h4>Backyard wellness</h4>
+              <a href="/cold-plunge-tubs">Cold plunge tubs<Icon name="arrow" size={16} /></a>
+              <a href="/saunas">Saunas<Icon name="arrow" size={16} /></a>
+              <a href="/products">All products<Icon name="arrow" size={16} /></a>
+              <a href="/brands">All brands<Icon name="arrow" size={16} /></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="/hot-tubs" aria-current={path.startsWith('/hot-tubs') ? 'page' : undefined}>Hot Tubs</a>
+      <a href="/swim-spas" aria-current={path.startsWith('/swim-spas') ? 'page' : undefined}>Swim Spas</a>
+
+      <div class="nav-item" data-nav-item>
+        <button type="button" class="nav-button" data-nav-button aria-expanded="false" aria-haspopup="true">
+          Products <Icon name="chevron" size={15} />
+        </button>
+        <div class="dropdown-menu" data-nav-menu>
+          {
+            products.map((category) => (
+              <a href={category.href}>
+                {category.label}
+                <small>{category.summary}</small>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="nav-item" data-nav-item>
+        <button type="button" class="nav-button" data-nav-button aria-expanded="false" aria-haspopup="true">
+          Support <Icon name="chevron" size={15} />
+        </button>
+        <div class="dropdown-menu dropdown-menu--wide" data-nav-menu>
+          {
+            supportLinks.map((link) => (
+              <a href={link.href}>
+                {link.label}
+                <small>{link.description}</small>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <a href="/locations" aria-current={path.startsWith('/locations') ? 'page' : undefined}>Locations</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="text-link desktop-only" href="/components"><Icon name="code" size={16} /> Components</a>
+      <a class="button button--small" href="/support/book-appointment"
+        ><Icon name="calendar" size={16} /> Book visit</a
+      >
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="mobile-navigation"
+        data-menu-toggle
+      >
+        <span class="menu-toggle__open"><Icon name="menu" /></span>
+        <span class="menu-toggle__close"><Icon name="close" /></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-navigation" data-mobile-menu hidden>
+    <div class="mobile-menu__viewport">
+      <section class="mobile-menu__panel is-current" data-mobile-panel="main" aria-label="Main menu">
+        <div class="mobile-menu__panel-scroll">
+          <div class="mobile-menu__selector">
+            <LocationSelector id="mobile-menu-location" compact label="Inventory location" />
+          </div>
+          <nav class="mobile-menu__nav" aria-label="Mobile navigation">
+            <button type="button" data-mobile-forward="shop">
+              <span><small>Browse everything</small>Shop</span><Icon name="arrow" size={19} />
+            </button>
+            <a href="/hot-tubs"
+              ><span><small>Premium brands</small>Hot Tubs</span><Icon name="arrow" size={19} /></a
+            >
+            <a href="/swim-spas"
+              ><span><small>Fitness + therapy</small>Swim Spas</span><Icon name="arrow" size={19} /></a
+            >
+            <button type="button" data-mobile-forward="products">
+              <span><small>Complete the backyard</small>Products</span><Icon name="arrow" size={19} />
+            </button>
+            <button type="button" data-mobile-forward="support">
+              <span><small>Ownership help</small>Support</span><Icon name="arrow" size={19} />
+            </button>
+            <a href="/locations"
+              ><span><small>Five showrooms</small>Locations</span><Icon name="arrow" size={19} /></a
+            >
+            <a href="/financing"
+              ><span><small>Flexible purchase options</small>Financing</span><Icon name="arrow" size={19} /></a
+            >
+          </nav>
+          <div class="mobile-menu__quick-actions">
+            <a href={site.phoneHref}><Icon name="phone" size={17} /> Call a specialist</a>
+            <a href="/support/book-appointment"><Icon name="calendar" size={17} /> Book a visit</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="mobile-menu__panel" data-mobile-panel="shop" aria-label="Shop menu" aria-hidden="true">
+        <header class="mobile-menu__panel-header">
+          <button type="button" data-mobile-back aria-label="Back to main menu"
+            ><Icon name="arrow" size={18} /> Back</button
+          >
+          <strong>Shop</strong>
+          <span aria-hidden="true"></span>
+        </header>
+        <div class="mobile-menu__panel-scroll mobile-menu__panel-scroll--sub">
+          <div class="mobile-menu__group">
+            <div class="mobile-menu__group-heading">
+              <span>Hot tubs by brand</span><a href="/hot-tubs">View all</a>
+            </div>
+            {
+              hotTubBrands.map((brand) => (
+                <a href={`/hot-tubs/${brand.slug}`}>
+                  {brand.name}
+                  <Icon name="arrow" size={17} />
+                </a>
+              ))
+            }
+          </div>
+          <div class="mobile-menu__group">
+            <div class="mobile-menu__group-heading">
+              <span>Swim spas by brand</span><a href="/swim-spas">View all</a>
+            </div>
+            {
+              swimSpaBrands.map((brand) => (
+                <a href={`/swim-spas/${brand.slug}`}>
+                  {brand.name}
+                  <Icon name="arrow" size={17} />
+                </a>
+              ))
+            }
+          </div>
+          <div class="mobile-menu__group">
+            <div class="mobile-menu__group-heading">
+              <span>More wellness</span><a href="/products">View all</a>
+            </div>
+            <a href="/cold-plunge-tubs">Cold plunge tubs<Icon name="arrow" size={17} /></a>
+            <a href="/saunas">Saunas<Icon name="arrow" size={17} /></a>
+            <a href="/brands">All brands<Icon name="arrow" size={17} /></a>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="mobile-menu__panel"
+        data-mobile-panel="products"
+        aria-label="Products menu"
+        aria-hidden="true"
+      >
+        <header class="mobile-menu__panel-header">
+          <button type="button" data-mobile-back aria-label="Back to main menu"
+            ><Icon name="arrow" size={18} /> Back</button
+          >
+          <strong>Products</strong>
+          <span aria-hidden="true"></span>
+        </header>
+        <div class="mobile-menu__panel-scroll mobile-menu__panel-scroll--sub">
+          <div class="mobile-menu__group">
+            {
+              products.map((category) => (
+                <a href={category.href} class="mobile-menu__detail-link">
+                  <>
+                    <span>
+                      <>
+                        <strong>{category.label}</strong>
+                        <small>{category.summary}</small>
+                      </>
+                    </span>
+                    <Icon name="arrow" size={18} />
+                  </>
+                </a>
+              ))
+            }
+          </div>
+          <a class="mobile-menu__featured-link" href="/products"
+            ><Icon name="grid" size={19} /><span
+              ><strong>Browse all products</strong><small>See every backyard category in one place.</small
+              ></span
+            ></a
+          >
+        </div>
+      </section>
+
+      <section
+        class="mobile-menu__panel"
+        data-mobile-panel="support"
+        aria-label="Support menu"
+        aria-hidden="true"
+      >
+        <header class="mobile-menu__panel-header">
+          <button type="button" data-mobile-back aria-label="Back to main menu"
+            ><Icon name="arrow" size={18} /> Back</button
+          >
+          <strong>Support</strong>
+          <span aria-hidden="true"></span>
+        </header>
+        <div class="mobile-menu__panel-scroll mobile-menu__panel-scroll--sub">
+          <div class="mobile-menu__group">
+            {
+              supportLinks.map((link) => (
+                <a href={link.href} class="mobile-menu__detail-link">
+                  <>
+                    <span>
+                      <>
+                        <strong>{link.label}</strong>
+                        <small>{link.description}</small>
+                      </>
+                    </span>
+                    <Icon name="arrow" size={18} />
+                  </>
+                </a>
+              ))
+            }
+          </div>
+          <div class="mobile-menu__location-links">
+            <span>Shop by showroom</span>
+            <div>
+              {
+                locations.map((location) => (
+                  <a href={`/locations/${location.slug}`} data-location-button={location.slug}>
+                    {location.city}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</header>
+
+<script>
+  // @ts-nocheck
+  const header = document.querySelector('[data-header]');
+  const menuToggle = document.querySelector('[data-menu-toggle]');
+  const mobileMenu = document.querySelector('[data-mobile-menu]');
+  const desktopItems = [...document.querySelectorAll('[data-nav-item]')];
+  const mobilePanels = [...document.querySelectorAll('[data-mobile-panel]')];
+
+  const positionDesktopMenu = (item) => {
+    const menu = item?.querySelector('[data-nav-menu]');
+    const trigger = item?.querySelector('[data-nav-button]');
+    if (!(menu instanceof HTMLElement) || !(trigger instanceof HTMLElement) || !(header instanceof HTMLElement))
+      return;
+    const headerRect = header.getBoundingClientRect();
+    menu.style.setProperty('--menu-top', `${Math.round(headerRect.bottom + 8)}px`);
+    if (menu.classList.contains('mega-menu')) {
+      menu.style.setProperty('--menu-left', '50vw');
+      return;
+    }
+    const triggerRect = trigger.getBoundingClientRect();
+    const menuWidth = menu.offsetWidth || 360;
+    const desiredLeft = triggerRect.left + triggerRect.width / 2 - menuWidth / 2;
+    const clampedLeft = Math.max(16, Math.min(desiredLeft, window.innerWidth - menuWidth - 16));
+    menu.style.setProperty('--menu-left', `${Math.round(clampedLeft)}px`);
+  };
+
+  const closeDesktopMenus = (except) => {
+    desktopItems.forEach((item) => {
+      if (item === except) return;
+      item.classList.remove('is-open');
+      item.querySelector('[data-nav-button]')?.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  desktopItems.forEach((item) => {
+    const button = item.querySelector('[data-nav-button]');
+    const open = () => positionDesktopMenu(item);
+    item.addEventListener('mouseenter', open);
+    item.addEventListener('focusin', open);
+    button?.addEventListener('click', () => {
+      const willOpen = !item.classList.contains('is-open');
+      closeDesktopMenus(item);
+      item.classList.toggle('is-open', willOpen);
+      button.setAttribute('aria-expanded', String(willOpen));
+      if (willOpen) positionDesktopMenu(item);
+    });
+  });
+
+  const showMobilePanel = (name, focusBack = false) => {
+    mobilePanels.forEach((panel) => {
+      const isMain = panel.getAttribute('data-mobile-panel') === 'main';
+      const isTarget = panel.getAttribute('data-mobile-panel') === name;
+      panel.classList.toggle('is-current', isTarget);
+      panel.classList.toggle('is-previous', !isTarget && isMain && name !== 'main');
+      panel.setAttribute('aria-hidden', String(!isTarget));
+    });
+    mobileMenu?.setAttribute('data-active-panel', name);
+    if (focusBack && name !== 'main') {
+      window.setTimeout(
+        () => mobileMenu?.querySelector(`[data-mobile-panel="${name}"] [data-mobile-back]`)?.focus(),
+        240,
+      );
+    }
+  };
+
+  const updateMobileTop = () => {
+    if (!(header instanceof HTMLElement) || !(mobileMenu instanceof HTMLElement)) return;
+    mobileMenu.style.setProperty('--mobile-menu-top', `${Math.round(header.getBoundingClientRect().bottom)}px`);
+  };
+
+  const closeMobileMenu = () => {
+    if (!(menuToggle instanceof HTMLButtonElement) || !(mobileMenu instanceof HTMLElement)) return;
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open navigation');
+    mobileMenu.hidden = true;
+    document.body.classList.remove('menu-open');
+    showMobilePanel('main');
+  };
+
+  const openMobileMenu = () => {
+    if (!(menuToggle instanceof HTMLButtonElement) || !(mobileMenu instanceof HTMLElement)) return;
+    updateMobileTop();
+    showMobilePanel('main');
+    mobileMenu.hidden = false;
+    menuToggle.setAttribute('aria-expanded', 'true');
+    menuToggle.setAttribute('aria-label', 'Close navigation');
+    document.body.classList.add('menu-open');
+  };
+
+  menuToggle?.addEventListener('click', () => {
+    const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+    isOpen ? closeMobileMenu() : openMobileMenu();
+  });
+
+  mobileMenu?.querySelectorAll('[data-mobile-forward]').forEach((button) => {
+    button.addEventListener('click', () =>
+      showMobilePanel(button.getAttribute('data-mobile-forward') || 'main', true),
+    );
+  });
+  mobileMenu?.querySelectorAll('[data-mobile-back]').forEach((button) => {
+    button.addEventListener('click', () => {
+      showMobilePanel('main');
+      window.setTimeout(() => mobileMenu?.querySelector(`[data-mobile-forward]`)?.focus(), 240);
+    });
+  });
+  mobileMenu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMobileMenu));
+
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('[data-nav-item]')) closeDesktopMenus();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (menuToggle?.getAttribute('aria-expanded') === 'true') {
+      const activePanel = mobileMenu?.getAttribute('data-active-panel');
+      if (activePanel && activePanel !== 'main') showMobilePanel('main');
+      else {
+        closeMobileMenu();
+        menuToggle?.focus();
+      }
+    } else {
+      closeDesktopMenus();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 980) closeMobileMenu();
+    else updateMobileTop();
+    desktopItems.forEach((item) => {
+      if (item.classList.contains('is-open')) positionDesktopMenu(item);
+    });
+  });
+  window.addEventListener(
+    'scroll',
+    () => {
+      header?.classList.toggle('is-scrolled', window.scrollY > 16);
+      if (menuToggle?.getAttribute('aria-expanded') === 'true') updateMobileTop();
+      desktopItems.forEach((item) => {
+        if (item.classList.contains('is-open')) positionDesktopMenu(item);
+      });
+    },
+    { passive: true },
+  );
+</script>

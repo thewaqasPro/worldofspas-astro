@@ -1,0 +1,28 @@
+{
+  "name": "world-of-spas-astro-rebuild",
+  "version": "3.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "typecheck": "astro check",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "astro": "^5.13.10"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@tailwindcss/vite": "^4.3.1",
+    "prettier": "3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,196 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import HeroSlider from '@/components/HeroSlider.astro';
+import BrandCarousel from '@/components/BrandCarousel.astro';
+import CategoryTile from '@/components/CategoryTile.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import LocationMap from '@/components/LocationMap.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import { featuredInventory, productCategories } from '@/data/inventory';
+import { locations } from '@/data/locations';
+import { lifestyleImages } from '@/data/site';
+---
+
+<Layout>
+  <HeroSlider />
+  <BrandCarousel />
+  <section class="section intro-band">
+    <div class="container grid grid--2" style="align-items:start">
+      <div data-reveal>
+        <span class="eyebrow">Multi-brand buying power</span><h2>
+          One dealer network. The best-fit brand for every backyard.
+        </h2>
+      </div>
+      <div data-reveal>
+        <p style="color:var(--muted);font-size:1.1rem">
+          World of Spas is built for shoppers comparing many brands, many product categories, and many showroom
+          locations. This rebuild keeps that complexity manageable with reusable data, dynamic inventory
+          filtering, and location-aware forms.
+        </p><a class="arrow-link" href="/brands">Compare all brands <Icon name="arrow" size={18} /></a>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Shop the lineup"
+        title="Hot tubs, swim spas, saunas, cold plunge tubs, and backyard upgrades."
+        description="Each card links to a reusable category template and supports the same location-aware inventory system."
+      />
+      <div class="grid grid--3">
+        {
+          productCategories.map((category, index) => (
+            <CategoryTile
+              label={category.label}
+              summary={category.summary}
+              href={category.href}
+              icon={
+                index % 5 === 0
+                  ? 'wave'
+                  : index % 5 === 1
+                    ? 'energy'
+                    : index % 5 === 2
+                      ? 'leaf'
+                      : index % 5 === 3
+                        ? 'spark'
+                        : 'cart'
+              }
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Location-aware inventory"
+        title="The catalog changes when shoppers choose a showroom."
+        description="Select a location in the header or hero panel. Product cards, availability badges, counts, and inquiry forms update immediately."
+      />
+      <div class="product-grid" data-sortable-grid>
+        {
+          featuredInventory.slice(0, 6).map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+      <div style="margin-top:34px;display:flex;gap:12px;flex-wrap:wrap">
+        <a class="button" href="/products">Browse all products <Icon name="arrow" size={18} /></a><a
+          class="button button--outline"
+          href="/locations">Choose a showroom</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="section section--dark">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Why shoppers choose World of Spas"
+        title="Showroom guidance, installation planning, service support, and financing in one place."
+        theme="light"
+      />
+      <div class="benefit-grid">
+        <article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="star" /></span><h3>Brand comparison</h3><p>
+            Compare Master Spas, Cal Spas, Dynasty, DreamMaker, CozyPro, and wellness brands side by side.
+          </p>
+        </article>
+        <article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="pin" /></span><h3>Local availability</h3><p>
+            Direct shoppers to the right Calgary, Kelowna, Edmonton, Red Deer, or Saskatoon showroom.
+          </p>
+        </article>
+        <article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="tools" /></span><h3>Parts & service</h3><p>
+            Support the ownership journey after delivery with maintenance, repairs, and care products.
+          </p>
+        </article>
+        <article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="calendar" /></span><h3>Appointments</h3><p>
+            Give high-intent shoppers a clear path to showroom tours, wet tests, and model consultations.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="split-story">
+        <div class="split-story__media">
+          <img
+            src={lifestyleImages.showroom}
+            alt="Premium backyard pool and spa showroom inspiration"
+            width="1600"
+            height="1100"
+            loading="lazy"
+          />
+        </div>
+        <div class="split-story__content">
+          <span class="eyebrow">Built for expansion</span><h2>
+            Pages are generated from data, not rebuilt by hand.
+          </h2><p>
+            The site now has brand pages, location pages, category pages, product detail pages, support pages,
+            and a component library route to make future additions faster.
+          </p><ul class="check-list">
+            <li><Icon name="check" size={19} /> Add a product once in <code>src/data/inventory.ts</code></li><li
+            >
+              <Icon name="check" size={19} /> Brand and location pages generate automatically
+            </li><li><Icon name="check" size={19} /> Component notes live at <code>/components</code></li>
+          </ul><a class="button button--outline" href="/components"
+            >Open component library <Icon name="arrow" size={18} /></a
+          >
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section section--aqua">
+    <div class="container grid grid--2" style="align-items:start">
+      <div>
+        <SectionHeading
+          eyebrow="Our locations"
+          title="Five showrooms across Western Canada."
+          description="The live selector is powered by the same location data used for store pages, cards, maps, and forms."
+        /><div class="location-list">
+          {
+            locations.map((location) => (
+              <article class="location-card">
+                <>
+                  <h3>
+                    {location.city}, {location.province}
+                  </h3>
+                  <p>
+                    {location.address}
+                    <br />
+                    {location.phone}
+                  </p>
+                  <a
+                    class="arrow-link"
+                    href={`/locations/${location.slug}`}
+                    data-location-button={location.slug}
+                  >
+                    View showroom <Icon name="arrow" size={18} />
+                  </a>
+                </>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+      <LocationMap />
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <InquiryForm title="Start with your nearest showroom" context="Homepage inquiry" />
+    </div>
+  </section>
+</Layout>

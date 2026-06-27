@@ -1,0 +1,86 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { brands } from '@/data/brands';
+import { getItemsByBrand } from '@/data/inventory';
+export function getStaticPaths() {
+  return brands.map((brand) => ({ params: { brand: brand.slug }, props: { brand } }));
+}
+const { brand } = Astro.props;
+const items = getItemsByBrand(brand.slug);
+---
+
+<Layout title={`${brand.name} | World of Spas`} description={brand.description}>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs">
+        <a href="/">Home</a><span>/</span><a href="/brands">Brands</a><span>/</span><span>{brand.name}</span>
+      </div><span class="eyebrow eyebrow--light">{brand.tagline}</span><h1>{brand.name}</h1><p
+        class="page-hero__copy"
+      >
+        {brand.description}
+      </p><div class="page-hero__actions">
+        {
+          brand.routes.map((route) => (
+            <a class="button button--light" href={route.href}>
+              {route.label} <Icon name="arrow" size={18} />
+            </a>
+          ))
+        }<a class="button button--outline-light" href="/support/book-appointment">Book appointment</a>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Brand routes"
+        title="Connect shoppers to the right category path."
+        description="Each brand can link to hot tub, swim spa, sauna, cold plunge, or accessory pages depending on what the business carries."
+      /><div class="grid grid--3">
+        {
+          brand.routes.map((route) => (
+            <a class="category-tile" href={route.href}>
+              <>
+                <span class="category-tile__icon">
+                  <Icon name="arrow" />
+                </span>
+                <span>
+                  <>
+                    <strong>{route.label}</strong>
+                    <small>View the matching collection page.</small>
+                  </>
+                </span>
+                <Icon name="arrow" size={18} />
+              </>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  {
+    items.length > 0 && (
+      <section class="section section--sand">
+        <div class="container">
+          <>
+            <InventoryToolbar resultLabel={`${brand.name} products`} showBrandFilter={false} />
+            <div class="product-grid" data-sortable-grid>
+              {items.map((item) => (
+                <div
+                  data-name={item.name}
+                  data-featured={String(item.featured)}
+                  data-clearance={String(item.clearance)}
+                >
+                  <ProductCard item={item} />
+                </div>
+              ))}
+            </div>
+          </>
+        </div>
+      </section>
+    )
+  }
+</Layout>

@@ -1,0 +1,72 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CategoryTile from '@/components/CategoryTile.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { inventory, productCategories } from '@/data/inventory';
+---
+
+<Layout
+  title="All Products | World of Spas"
+  description="Browse hot tubs, swim spas, saunas, cold plunge tubs, gazebos, patio heaters, pizza ovens, massage chairs, chemicals, and filters."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Products</span></div><span
+        class="eyebrow eyebrow--light">Full lineup</span
+      ><h1>Every backyard wellness category in one catalog.</h1><p class="page-hero__copy">
+        Use the reusable category templates or filter the full catalog by location, brand, and clearance status.
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#inventory">View catalog <Icon name="arrow" size={18} /></a><a
+          class="button button--outline-light"
+          href="/support/resources">Planning guides</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Categories" title="Reusable category landing pages." /><div class="grid grid--3">
+        {
+          productCategories.map((category, index) => (
+            <CategoryTile
+              label={category.label}
+              summary={category.summary}
+              href={category.href}
+              icon={
+                index % 5 === 0
+                  ? 'wave'
+                  : index % 5 === 1
+                    ? 'energy'
+                    : index % 5 === 2
+                      ? 'leaf'
+                      : index % 5 === 3
+                        ? 'spark'
+                        : 'cart'
+              }
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand" id="inventory">
+    <div class="container">
+      <InventoryToolbar resultLabel="products" /><div class="product-grid" data-sortable-grid>
+        {
+          inventory.map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,94 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import LocationMap from '@/components/LocationMap.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { locations } from '@/data/locations';
+import { inventory } from '@/data/inventory';
+export function getStaticPaths() {
+  return locations.map((location) => ({ params: { location: location.slug }, props: { location } }));
+}
+const { location } = Astro.props;
+const items = inventory.filter((item) => item.locations.includes(location.slug));
+---
+
+<Layout
+  title={`World of Spas ${location.city} | Showroom & Local Inventory`}
+  description={`Shop hot tubs, swim spas, saunas, and backyard wellness products at World of Spas ${location.city}.`}
+>
+  <script is:inline define:vars={{ selectedLocation: location.slug }}>
+    window.localStorage.setItem('wos-location', selectedLocation);
+  </script>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs">
+        <a href="/">Home</a><span>/</span><a href="/locations">Locations</a><span>/</span><span
+          >{location.city}</span
+        >
+      </div><span class="eyebrow eyebrow--light">{location.region}</span><h1>
+        World of Spas {location.city}
+      </h1><p class="page-hero__copy">
+        {location.address} · {location.postalCode}<br />{location.phone} · {location.hours}
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#inventory" data-location-button={location.slug}
+          >Shop {location.city} inventory <Icon name="arrow" size={18} /></a
+        ><a class="button button--outline-light" href={location.phoneHref}>Call showroom</a>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid grid--2" style="align-items:start">
+      <div>
+        <SectionHeading
+          eyebrow="Showroom details"
+          title={location.showroomSize}
+          description={location.serviceNotes}
+        /><ul class="check-list">
+          {
+            location.highlights.map((highlight) => (
+              <li>
+                <Icon name="check" size={19} />
+                {highlight}
+              </li>
+            ))
+          }
+        </ul><a
+          class="button button--outline"
+          href="/support/book-appointment"
+          data-location-button={location.slug}>Book a visit <Icon name="arrow" size={18} /></a
+        >
+      </div><LocationMap active={location.slug} />
+    </div>
+  </section>
+  <section class="section section--sand" id="inventory">
+    <div class="container">
+      <InventoryToolbar resultLabel={`${location.city} products`} /><div
+        class="product-grid"
+        data-sortable-grid
+      >
+        {
+          items.map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <InquiryForm
+        title={`Ask ${location.city} about pricing or availability`}
+        context={`${location.city} location page`}
+      />
+    </div>
+  </section>
+</Layout>

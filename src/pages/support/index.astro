@@ -1,0 +1,49 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CategoryTile from '@/components/CategoryTile.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { supportLinks } from '@/data/site';
+---
+
+<Layout
+  title="Support | World of Spas"
+  description="Contact World of Spas, book appointments, access parts and service, and browse resources."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Support</span></div><span
+        class="eyebrow eyebrow--light">Support centre</span
+      ><h1>Help before and after the sale.</h1><p class="page-hero__copy">
+        Get in touch, schedule a visit, request service, or browse owner resources.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Support paths" title="Route every customer to the right next step." /><div
+        class="grid grid--3"
+      >
+        {
+          supportLinks.map((link, index) => (
+            <CategoryTile
+              label={link.label}
+              summary={link.description}
+              href={link.href}
+              icon={
+                index === 0
+                  ? 'calendar'
+                  : index === 1
+                    ? 'tools'
+                    : index === 2
+                      ? 'code'
+                      : index === 3
+                        ? 'pin'
+                        : 'mail'
+              }
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

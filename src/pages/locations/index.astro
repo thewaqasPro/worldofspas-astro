@@ -1,0 +1,72 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import LocationMap from '@/components/LocationMap.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import { locations } from '@/data/locations';
+---
+
+<Layout
+  title="Locations | World of Spas"
+  description="Find World of Spas showrooms in Calgary, Kelowna, Edmonton, Red Deer, and Saskatoon."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Locations</span></div><span
+        class="eyebrow eyebrow--light">Our showrooms</span
+      ><h1>Choose your nearest World of Spas location.</h1><p class="page-hero__copy">
+        Location selection powers the catalog, product availability labels, forms, and local showroom pages.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid grid--2" style="align-items:start">
+      <LocationMap /><div>
+        <SectionHeading eyebrow="Five locations" title="Western Canada showroom support." /><div
+          class="location-list"
+        >
+          {
+            locations.map((location) => (
+              <article class="location-card">
+                <>
+                  <div class="location-card__top">
+                    <>
+                      <div>
+                        <>
+                          <h3>
+                            {location.city}, {location.province}
+                          </h3>
+                          <p>
+                            {location.address}
+                            <br />
+                            {location.postalCode}
+                          </p>
+                        </>
+                      </div>
+                      <strong>{location.region}</strong>
+                    </>
+                  </div>
+                  <p>{location.serviceNotes}</p>
+                  <div class="location-card__actions">
+                    <>
+                      <a href={location.phoneHref}>{location.phone}</a>
+                      <a href={`/locations/${location.slug}`} data-location-button={location.slug}>
+                        View location
+                      </a>
+                      <a href={`/products?location=${location.slug}`}>Shop local inventory</a>
+                    </>
+                  </div>
+                </>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand">
+    <div class="container">
+      <InquiryForm title="Book at your preferred showroom" context="Locations page" />
+    </div>
+  </section>
+</Layout>

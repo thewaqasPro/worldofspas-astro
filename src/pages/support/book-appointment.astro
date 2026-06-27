@@ -1,0 +1,43 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+---
+
+<Layout
+  title="Book Appointment | World of Spas"
+  description="Schedule a showroom tour, wet test, or product consultation at World of Spas."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs">
+        <a href="/">Home</a><span>/</span><a href="/support">Support</a><span>/</span><span
+          >Book Appointment</span
+        >
+      </div><span class="eyebrow eyebrow--light">Appointment</span><h1>
+        Book a showroom visit or product consultation.
+      </h1><p class="page-hero__copy">
+        The selected location is synced into the form automatically so shoppers land with the right showroom
+        context.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container"><InquiryForm title="Schedule your visit" context="Book appointment" /></div>
+  </section>
+  <section class="section section--sand">
+    <div class="container">
+      <SectionHeading eyebrow="What to bring" title="Make the visit productive." /><div class="benefit-grid">
+        <article class="benefit-card">
+          <h3>Space dimensions</h3><p>Bring patio/deck measurements and photos of access paths.</p>
+        </article><article class="benefit-card">
+          <h3>Use goals</h3><p>Relaxation, therapy, fitness, family time, or all-season entertainment.</p>
+        </article><article class="benefit-card">
+          <h3>Budget range</h3><p>Include accessories, electrical, delivery, covers, and water-care needs.</p>
+        </article><article class="benefit-card">
+          <h3>Timing</h3><p>Tell the team whether you need in-stock delivery or are planning ahead.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</Layout>

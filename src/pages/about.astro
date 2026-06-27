@@ -1,0 +1,58 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { lifestyleImages } from '@/data/site';
+---
+
+<Layout
+  title="About World of Spas"
+  description="Learn about World of Spas, a multi-location hot tub, swim spa, and wellness product dealer serving Western Canada."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>About</span></div><span
+        class="eyebrow eyebrow--light">About</span
+      ><h1>A dealer experience designed around trust, service, and choice.</h1><p class="page-hero__copy">
+        This page supports brand positioning, awards, service philosophy, charity/community content, and
+        location credibility.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="split-story">
+        <div class="split-story__media">
+          <img src={lifestyleImages.family} alt="Family enjoying a backyard pool area" />
+        </div><div class="split-story__content">
+          <span class="eyebrow">Company story</span><h2>Help shoppers make the right long-term choice.</h2><p>
+            A hot tub, swim spa, sauna, or outdoor living product should be sold with installation planning,
+            water-care education, financing guidance, and service support—not just a model number.
+          </p><ul class="check-list">
+            <li><Icon name="check" size={19} /> Multi-brand comparison</li><li>
+              <Icon name="check" size={19} /> Showroom consultation and wet testing
+            </li><li><Icon name="check" size={19} /> Installation and service support</li><li>
+              <Icon name="check" size={19} /> Ownership resources and supplies
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Proof points"
+        title="A structure for awards, reviews, and community support."
+      /><div class="grid grid--3">
+        <article class="benefit-card">
+          <h3>Top-choice messaging</h3><p>Use this area for awards and verified review highlights.</p>
+        </article><article class="benefit-card">
+          <h3>Canadian owned</h3><p>Highlight regional expertise and Western Canadian ownership guidance.</p>
+        </article><article class="benefit-card">
+          <h3>Charity support</h3><p>Add approved charity logos and community sponsorships here.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</Layout>

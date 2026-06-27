@@ -1,0 +1,22 @@
+---
+import Icon from './Icon.astro';
+import { featuredBrands } from '@/data/brands';
+---
+
+<div class="brand-carousel" aria-label="Featured brands" data-brand-carousel>
+  <div class="brand-carousel__track">
+    {
+      [...featuredBrands, ...featuredBrands].map((brand) => (
+        <a
+          class="brand-card"
+          href={`/brands/${brand.slug}`}
+          style={`--brand:${brand.color};--brand-text:${brand.textColor};`}
+        >
+          <span class="brand-card__wordmark">{brand.name}</span>
+          <small>{brand.tagline}</small>
+          <Icon name="arrow" size={18} />
+        </a>
+      ))
+    }
+  </div>
+</div>

@@ -1,0 +1,58 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { getItemsByCategory } from '@/data/inventory';
+import { lifestyleImages } from '@/data/site';
+const items = getItemsByCategory('saunas');
+---
+
+<Layout
+  title="Saunas | World of Spas"
+  description="Shop outdoor saunas and heat therapy products through World of Spas showrooms."
+>
+  <section class="page-hero">
+    <div class="page-hero__media">
+      <img src={lifestyleImages.heroSauna} alt="Outdoor sauna and wellness pool inspiration" />
+    </div><div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Saunas</span></div><span
+        class="eyebrow eyebrow--light">Heat therapy</span
+      ><h1>Outdoor saunas for year-round recovery.</h1><p class="page-hero__copy">
+        Compare sauna options and combine heat therapy with cold plunge and spa ownership.
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#inventory">Shop saunas <Icon name="arrow" size={18} /></a><a
+          class="button button--outline-light"
+          href="/support/book-appointment">Book consultation</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Sauna planning"
+        title="Heat, cold, water, and rest in a complete backyard routine."
+        description="Sauna shoppers often need foundation, electrical or wood-burning setup, setbacks, and delivery advice. The consultation form and location selector help direct those questions to the right showroom."
+      />
+    </div>
+  </section>
+  <section class="section section--sand" id="inventory">
+    <div class="container">
+      <InventoryToolbar resultLabel="saunas" /><div class="product-grid" data-sortable-grid>
+        {
+          items.map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

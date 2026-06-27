@@ -1,0 +1,165 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductVisual from '@/components/ProductVisual.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { getBrand } from '@/data/brands';
+import { categoryLabels, inventory } from '@/data/inventory';
+import { locations } from '@/data/locations';
+export function getStaticPaths() {
+  return inventory.map((item) => ({ params: { slug: item.slug }, props: { item } }));
+}
+const { item } = Astro.props;
+const brand = getBrand(item.brand);
+const related = inventory
+  .filter((candidate) => candidate.category === item.category && candidate.slug !== item.slug)
+  .slice(0, 3);
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: item.name,
+  brand: { '@type': 'Brand', name: brand?.name },
+  category: categoryLabels[item.category],
+  description: item.summary,
+};
+---
+
+<Layout title={`${item.name} | World of Spas`} description={item.summary} structuredData={structuredData}>
+  <section class="product-hero">
+    <div class="container">
+      <div class="breadcrumbs" style="color:var(--muted)">
+        <a href="/">Home</a><span>/</span><a href="/products">Products</a><span>/</span><span>{item.name}</span>
+      </div><div class="product-hero__grid">
+        <div>
+          <span class="eyebrow">{brand?.name} · {item.collection}</span><h1>{item.name}</h1><p
+            class="product-hero__summary"
+          >
+            {item.summary}
+          </p><div
+            class="product-availability"
+            data-product-availability
+            data-available-locations={item.locations.join(' ')}
+          >
+            <Icon name="pin" size={18} /><span data-product-availability-text>Checking selected location…</span>
+          </div><div class="page-hero__actions" style="margin-top:28px">
+            <a class="button" href="/contact">Request pricing <Icon name="arrow" size={18} /></a><a
+              class="button button--outline"
+              href="/locations">Choose showroom</a
+            >
+          </div><dl class="product-hero__stats">
+            <div><dt>Category</dt><dd>{categoryLabels[item.category]}</dd></div><div>
+              <dt>Capacity</dt><dd>{item.capacity}</dd>
+            </div><div><dt>Dimensions</dt><dd>{item.dimensions}</dd></div><div>
+              <dt>Price tier</dt><dd>{item.priceTier}</dd>
+            </div>
+          </dl>
+        </div><div class="product-hero__render">
+          <ProductVisual
+            name={item.name}
+            category={item.category}
+            shell={item.shell}
+            cabinet={item.cabinet}
+            accent={item.accent}
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container feature-list-grid">
+      <div class="feature-list-grid__copy">
+        <span class="eyebrow">Overview</span><h2>{item.description}</h2><p>
+          {item.energy}. Availability, colors, pricing, specifications, delivery timing, and brand programs
+          should be confirmed with the selected showroom.
+        </p><a class="arrow-link" href={`/brands/${item.brand}`}
+          >View {brand?.name} brand page <Icon name="arrow" size={18} /></a
+        >
+      </div><div class="feature-stack">
+        {
+          item.highlights.map((highlight, index) => (
+            <article class="feature-row">
+              <>
+                <span class="feature-row__number">0{index + 1}</span>
+                <div>
+                  <>
+                    <h3>{highlight}</h3>
+                    <p>
+                      {index === 0
+                        ? 'A defining part of why shoppers compare this model.'
+                        : index === 1
+                          ? 'Designed to support day-to-day comfort and ownership.'
+                          : index === 2
+                            ? 'Helpful for showroom conversations and comparison shopping.'
+                            : 'A strong finishing detail for a more complete ownership experience.'}
+                    </p>
+                  </>
+                </div>
+              </>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Specifications"
+        title="Product planning details."
+        description="These fields are intentionally data-driven so real specifications can be swapped in later from a CMS or inventory feed."
+      /><table class="spec-table">
+        <tbody
+          ><tr><th>Brand</th><td>{brand?.name}</td></tr><tr><th>Collection</th><td>{item.collection}</td></tr
+          ><tr><th>Category</th><td>{categoryLabels[item.category]}</td></tr><tr
+            ><th>Capacity</th><td>{item.capacity}</td></tr
+          ><tr><th>Dimensions</th><td>{item.dimensions}</td></tr><tr
+            ><th>Therapy / use</th><td>{item.therapy}</td></tr
+          ><tr
+            ><th>Available locations</th><td
+              >{
+                item.locations
+                  .map((slug) => locations.find((location) => location.slug === slug)?.city)
+                  .join(', ')
+              }</td
+            ></tr
+          >{
+            item.specs.map((spec) => (
+              <tr>
+                <>
+                  <th>{spec.label}</th>
+                  <td>{spec.value}</td>
+                </>
+              </tr>
+            ))
+          }</tbody
+        >
+      </table>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <InquiryForm title={`Ask about ${item.name}`} context={`${item.name} product detail`} />
+    </div>
+  </section>
+  {
+    related.length > 0 && (
+      <section class="section section--aqua">
+        <div class="container">
+          <>
+            <SectionHeading
+              eyebrow="Compare similar"
+              title={`More ${categoryLabels[item.category].toLowerCase()}`}
+            />
+            <div class="product-grid">
+              {related.map((candidate) => (
+                <ProductCard item={candidate} compact />
+              ))}
+            </div>
+          </>
+        </div>
+      </section>
+    )
+  }
+</Layout>

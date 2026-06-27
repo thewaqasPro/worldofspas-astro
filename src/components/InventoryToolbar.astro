@@ -1,0 +1,63 @@
+---
+import Icon from './Icon.astro';
+import LocationSelector from './LocationSelector.astro';
+import { brands } from '@/data/brands';
+interface Props {
+  showBrandFilter?: boolean;
+  resultLabel?: string;
+}
+const { showBrandFilter = true, resultLabel = 'products' } = Astro.props;
+---
+
+<div class="inventory-toolbar" data-inventory-toolbar>
+  <div>
+    <span class="eyebrow">Live showroom filter</span>
+    <h2>Available near <span data-location-label>Calgary</span></h2>
+    <p><span data-visible-count>0</span> {resultLabel} shown for your selected location.</p>
+  </div>
+  <div class="inventory-toolbar__controls">
+    <LocationSelector id="inventory-location" compact label="Location" />
+    {
+      showBrandFilter && (
+        <label class="select-control">
+          <span>Brand</span>
+          <select data-brand-filter>
+            <option value="all">All brands</option>
+            {brands.map((brand) => (
+              <option value={brand.slug}>{brand.name}</option>
+            ))}
+          </select>
+        </label>
+      )
+    }
+    <label class="select-control">
+      <span>Sort</span>
+      <select data-sort-filter>
+        <option value="featured">Featured first</option>
+        <option value="name">Name A–Z</option>
+        <option value="clearance">Clearance first</option>
+      </select>
+    </label>
+    <button class="button button--outline button--small" type="button" data-clear-filters
+      ><Icon name="filter" size={16} /> Reset</button
+    >
+  </div>
+</div>
+
+<script>
+  // @ts-nocheck
+  const toolbars = document.querySelectorAll('[data-inventory-toolbar]');
+  toolbars.forEach((toolbar) => {
+    const brand = toolbar.querySelector('[data-brand-filter]');
+    const sort = toolbar.querySelector('[data-sort-filter]');
+    const reset = toolbar.querySelector('[data-clear-filters]');
+    const update = () => window.dispatchEvent(new CustomEvent('wos:inventory-filter'));
+    brand?.addEventListener('change', update);
+    sort?.addEventListener('change', update);
+    reset?.addEventListener('click', () => {
+      if (brand) brand.value = 'all';
+      if (sort) sort.value = 'featured';
+      update();
+    });
+  });
+</script>

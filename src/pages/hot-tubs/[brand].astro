@@ -1,0 +1,66 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { hotTubBrands } from '@/data/brands';
+import { getItemsByBrand } from '@/data/inventory';
+export function getStaticPaths() {
+  return hotTubBrands.map((brand) => ({ params: { brand: brand.slug }, props: { brand } }));
+}
+const { brand } = Astro.props;
+const items = getItemsByBrand(brand.slug, 'hot-tubs');
+---
+
+<Layout title={`${brand.name} Hot Tubs | World of Spas`} description={brand.description}>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs">
+        <a href="/">Home</a><span>/</span><a href="/hot-tubs">Hot Tubs</a><span>/</span><span>{brand.name}</span
+        >
+      </div><span class="eyebrow eyebrow--light">{brand.tagline}</span><h1>{brand.name} hot tubs.</h1><p
+        class="page-hero__copy"
+      >
+        {brand.description}
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#inventory"
+          >View available models <Icon name="arrow" size={18} /></a
+        ><a class="button button--outline-light" href="/support/book-appointment">Book showroom visit</a>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        eyebrow="Brand overview"
+        title={brand.authorizedNote || `Shop ${brand.name} through your nearest showroom.`}
+        description="Availability and display models change by location. Use the selector below to filter models by your preferred showroom."
+      /><div class="notice">
+        Official brand logos and manufacturer product photography were not copied. This rebuild uses original
+        wordmark-style brand cards and conceptual product illustrations; connect approved brand assets before
+        launch.
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand" id="inventory">
+    <div class="container">
+      <InventoryToolbar resultLabel={`${brand.name} hot tubs`} showBrandFilter={false} /><div
+        class="product-grid"
+        data-sortable-grid
+      >
+        {
+          items.map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

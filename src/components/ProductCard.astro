@@ -1,0 +1,57 @@
+---
+import Icon from './Icon.astro';
+import ProductVisual from './ProductVisual.astro';
+import { getBrand } from '@/data/brands';
+import { categoryLabels } from '@/data/inventory';
+import type { InventoryItem } from '@/data/inventory';
+interface Props {
+  item: InventoryItem;
+  compact?: boolean;
+}
+const { item, compact = false } = Astro.props;
+const brand = getBrand(item.brand);
+const locationsAttr = item.locations.join(' ');
+---
+
+<article
+  class:list={['product-card', compact && 'product-card--compact']}
+  data-reveal
+  data-location-card
+  data-available-locations={locationsAttr}
+  data-category={item.category}
+  data-brand={item.brand}
+  data-clearance={item.clearance ? 'true' : 'false'}
+>
+  <a class="product-card__visual" href={`/inventory/${item.slug}`} aria-label={`View ${item.name}`}>
+    <div class="product-card__badges">
+      {item.badge && <span>{item.badge}</span>}
+      {item.clearance && <span>Clearance</span>}
+      {item.year && <span>{item.year}</span>}
+    </div>
+    <ProductVisual
+      name={item.name}
+      category={item.category}
+      shell={item.shell}
+      cabinet={item.cabinet}
+      accent={item.accent}
+    />
+  </a>
+  <div class="product-card__body">
+    <div class="product-card__meta">
+      <span>{brand?.name}</span>
+      <span>{categoryLabels[item.category]}</span>
+    </div>
+    <h3><a href={`/inventory/${item.slug}`}>{item.name}</a></h3>
+    <p>{item.summary}</p>
+    <dl class="product-card__stats">
+      <div><dt>Capacity</dt><dd>{item.capacity}</dd></div>
+      <div><dt>Size</dt><dd>{item.dimensions}</dd></div>
+      <div><dt>Price</dt><dd>{item.priceTier}</dd></div>
+    </dl>
+    <div class="availability-pill" data-availability-pill>
+      <Icon name="pin" size={16} />
+      <span data-availability-text>Checking selected showroom…</span>
+    </div>
+    <a class="arrow-link" href={`/inventory/${item.slug}`}>View details <Icon name="arrow" size={18} /></a>
+  </div>
+</article>

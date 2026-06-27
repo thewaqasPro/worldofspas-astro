@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+interface Props {
+  title: string;
+  source: string;
+  href: string;
+  description: string;
+}
+const { title, source, href, description } = Astro.props;
+---
+
+<article class="component-example" data-reveal>
+  <div class="component-example__top">
+    <span><Icon name="code" size={18} /> Component</span><code>{source}</code>
+  </div>
+  <h3><a href={href}>{title}</a></h3>
+  <p>{description}</p>
+  <a class="arrow-link" href={href}>Open component notes <Icon name="arrow" size={18} /></a>
+</article>

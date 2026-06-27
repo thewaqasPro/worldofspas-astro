@@ -1,0 +1,44 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { brands } from '@/data/brands';
+---
+
+<Layout
+  title="Brands | World of Spas"
+  description="Compare the brands carried by World of Spas across hot tubs, swim spas, saunas, cold plunge tubs, outdoor living, and massage chairs."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Brands</span></div><span
+        class="eyebrow eyebrow--light">World class brands</span
+      ><h1>Multiple brands. One guided buying experience.</h1><p class="page-hero__copy">
+        Use brand pages for SEO, paid landing pages, showroom training, and product comparison flows.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Brand directory" title="Every brand has its own reusable landing page." /><div
+        class="grid grid--3"
+      >
+        {
+          brands.map((brand) => (
+            <a
+              class="brand-card"
+              style={`--brand:${brand.color};--brand-text:${brand.textColor};width:auto;min-height:190px`}
+              href={`/brands/${brand.slug}`}
+            >
+              <>
+                <span class="brand-card__wordmark">{brand.name}</span>
+                <small>{brand.description}</small>
+                <Icon name="arrow" size={18} />
+              </>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

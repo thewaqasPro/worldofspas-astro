@@ -1,0 +1,100 @@
+---
+import Icon from './Icon.astro';
+import LocationSelector from './LocationSelector.astro';
+interface Props {
+  title?: string;
+  context?: string;
+  compact?: boolean;
+}
+const {
+  title = 'Request pricing or book a showroom visit',
+  context = 'General inquiry',
+  compact = false,
+} = Astro.props;
+---
+
+<div class:list={['form-card', compact && 'form-card--compact']}>
+  <form
+    name="world-of-spas-inquiry"
+    method="POST"
+    action="/thank-you"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+  >
+    <input type="hidden" name="form-name" value="world-of-spas-inquiry" />
+    <input type="hidden" name="context" value={context} />
+    <p hidden><label>Do not fill this out: <input name="bot-field" /></label></p>
+    <div class="form-card__header">
+      <span class="eyebrow">Consultation</span>
+      <h2>{title}</h2>
+      <p>
+        Tell us what you are shopping for and the showroom nearest you. The selected location will sync
+        automatically.
+      </p>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label for="firstName">First name</label><input
+          id="firstName"
+          name="firstName"
+          autocomplete="given-name"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="lastName">Last name</label><input
+          id="lastName"
+          name="lastName"
+          autocomplete="family-name"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="email">Email</label><input
+          id="email"
+          type="email"
+          name="email"
+          autocomplete="email"
+          required
+        />
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label><input id="phone" type="tel" name="phone" autocomplete="tel" />
+      </div>
+      <div class="field">
+        <LocationSelector id="inquiry-location" name="location" label="Preferred location" />
+      </div>
+      <div class="field">
+        <label for="interest">Product of interest</label><select id="interest" name="interest"
+          ><option>Hot Tub</option><option>Swim Spa</option><option>Sauna</option><option
+            >Cold Plunge Tub</option
+          ><option>Gazebo</option><option>Patio Heater</option><option>Pizza Oven</option><option
+            >Massage Chair</option
+          ><option>Parts & Service</option></select
+        >
+      </div>
+      <div class="field field--full">
+        <label for="message">How can we help?</label><textarea
+          id="message"
+          name="message"
+          placeholder="Mention models, brands, timing, budget, or site-planning questions."></textarea>
+      </div>
+      <div class="field field--full checkbox-field">
+        <label
+          ><input type="checkbox" name="smsConsent" /> Yes, I would like to receive text messages about my inquiry.
+          Message and data rates may apply.</label
+        >
+      </div>
+      <div class="field field--full checkbox-field">
+        <label
+          ><input type="checkbox" name="contactConsent" required /> I agree to be contacted about this request.</label
+        >
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="button" type="submit">Send request <Icon name="arrow" size={18} /></button><p>
+        Netlify-ready form with a synced location selector and hidden inquiry context.
+      </p>
+    </div>
+  </form>
+</div>

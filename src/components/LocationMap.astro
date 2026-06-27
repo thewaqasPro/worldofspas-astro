@@ -1,0 +1,26 @@
+---
+import Icon from './Icon.astro';
+import { locations } from '@/data/locations';
+interface Props {
+  active?: string;
+}
+const { active } = Astro.props;
+---
+
+<div class="location-map" aria-label="World of Spas Western Canada showroom map">
+  <div class="location-map__grid"></div>
+  {
+    locations.map((location) => (
+      <a
+        class:list={['location-map__pin', active === location.slug && 'is-active']}
+        href={`/locations/${location.slug}`}
+        style={`--x:${location.coordinates.x}%;--y:${location.coordinates.y}%;`}
+        data-location-button={location.slug}
+        aria-label={`View ${location.city} showroom`}
+      >
+        <Icon name="pin" size={20} />
+        <span>{location.city}</span>
+      </a>
+    ))
+  }
+</div>

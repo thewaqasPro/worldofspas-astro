@@ -1,0 +1,55 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import InventoryToolbar from '@/components/InventoryToolbar.astro';
+import Icon from '@/components/Icon.astro';
+import { getItemsByCategory, productCategories, type ProductCategory } from '@/data/inventory';
+export function getStaticPaths() {
+  return productCategories
+    .filter((cat) => !['hot-tubs', 'swim-spas', 'cold-plunge-tubs', 'saunas'].includes(cat.slug))
+    .map((category) => ({ params: { category: category.slug }, props: { category } }));
+}
+const { category } = Astro.props;
+const items = getItemsByCategory(category.slug as ProductCategory);
+---
+
+<Layout title={`${category.label} | World of Spas`} description={category.summary}>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs">
+        <a href="/">Home</a><span>/</span><a href="/products">Products</a><span>/</span><span
+          >{category.label}</span
+        >
+      </div><span class="eyebrow eyebrow--light">{category.label}</span><h1>{category.summary}</h1><p
+        class="page-hero__copy"
+      >
+        Browse location-aware products and request details from your nearest World of Spas showroom.
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="#inventory">View products <Icon name="arrow" size={18} /></a><a
+          class="button button--outline-light"
+          href="/contact">Ask a question</a
+        >
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand" id="inventory">
+    <div class="container">
+      <InventoryToolbar resultLabel={category.label.toLowerCase()} /><div
+        class="product-grid"
+        data-sortable-grid
+      >
+        {
+          items.map((item) => (
+            <div
+              data-name={item.name}
+              data-featured={String(item.featured)}
+              data-clearance={String(item.clearance)}
+            >
+              <ProductCard item={item} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

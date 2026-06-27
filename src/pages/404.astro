@@ -1,0 +1,21 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Icon from '@/components/Icon.astro';
+---
+
+<Layout title="Page Not Found | World of Spas" noindex={true}
+  ><section class="page-hero" style="min-height:70vh;display:flex;align-items:center">
+    <div class="container page-hero__inner">
+      <span class="eyebrow eyebrow--light">404</span><h1>This page is not in the showroom.</h1><p
+        class="page-hero__copy"
+      >
+        Try the product catalog, location selector, or support centre.
+      </p><div class="page-hero__actions">
+        <a class="button button--light" href="/products">Browse products <Icon name="arrow" size={18} /></a><a
+          class="button button--outline-light"
+          href="/locations">Find a showroom</a
+        >
+      </div>
+    </div>
+  </section></Layout
+>

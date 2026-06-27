@@ -1,0 +1,54 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+---
+
+<Layout
+  title="Parts & Service | World of Spas"
+  description="Request hot tub service, parts, maintenance, repairs, installation support, and water-care guidance."
+>
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="breadcrumbs">
+        <a href="/">Home</a><span>/</span><a href="/support">Support</a><span>/</span><span
+          >Parts & Service</span
+        >
+      </div><span class="eyebrow eyebrow--light">Service centre</span><h1>
+        Maintenance, installation, repairs, and parts support.
+      </h1><p class="page-hero__copy">
+        A dedicated route for owners who need help after purchase, plus a strong cross-sell path for care
+        supplies.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Service areas" title="Everything needed to keep the spa running." /><div
+        class="benefit-grid"
+      >
+        <article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="tools" /></span><h3>Maintenance</h3><p>
+            Routine servicing, drain-and-fill help, filter care, and seasonal checks.
+          </p>
+        </article><article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="shield" /></span><h3>Repairs</h3><p>
+            Troubleshooting, replacement parts, pumps, control systems, and upgrades.
+          </p>
+        </article><article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="pin" /></span><h3>Installation</h3><p>
+            Delivery planning, site access, foundation checks, and electrical coordination.
+          </p>
+        </article><article class="benefit-card">
+          <span class="benefit-card__icon"><Icon name="cart" /></span><h3>Supplies</h3><p>
+            Chemicals, filters, cover lifters, steps, accessories, and care kits.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <section class="section section--sand">
+    <div class="container"><InquiryForm title="Request parts or service" context="Parts and service" /></div>
+  </section>
+</Layout>

@@ -1,0 +1,135 @@
+---
+import Icon from './Icon.astro';
+import LocationSelector from './LocationSelector.astro';
+import { lifestyleImages } from '@/data/site';
+const slides = [
+  {
+    eyebrow: 'Summer savings event',
+    title: 'Hot tubs, swim spas, and wellness products across Western Canada.',
+    copy: 'Compare premium brands, check showroom availability, and build a backyard plan around the location nearest you.',
+    image: lifestyleImages.heroHotTub,
+    href: '/hot-tubs',
+    cta: 'Shop hot tubs',
+    secondary: '/locations',
+    secondaryLabel: 'Choose location',
+  },
+  {
+    eyebrow: 'Fitness + hydrotherapy',
+    title: 'Swim spas for training, recovery, and family time.',
+    copy: 'Explore Master Spas and Dynasty swim spa models with location-aware availability and showroom consultation paths.',
+    image: lifestyleImages.heroSwim,
+    href: '/swim-spas',
+    cta: 'Explore swim spas',
+    secondary: '/support/book-appointment',
+    secondaryLabel: 'Book wet test',
+  },
+  {
+    eyebrow: 'Complete backyard wellness',
+    title: 'Saunas, cold plunges, gazebos, patio heat, and more.',
+    copy: 'Create a full-season oasis with products and service support from Calgary to Saskatoon.',
+    image: lifestyleImages.heroSauna,
+    href: '/products',
+    cta: 'Browse products',
+    secondary: '/support/resources',
+    secondaryLabel: 'Planning resources',
+  },
+];
+---
+
+<section class="hero-slider" data-hero-slider>
+  {
+    slides.map((slide, index) => (
+      <article
+        class:list={['hero-slide', index === 0 && 'is-active']}
+        data-hero-slide
+        aria-hidden={index === 0 ? 'false' : 'true'}
+      >
+        <div class="hero-slide__media">
+          <img
+            src={slide.image}
+            alt=""
+            width="2200"
+            height="1400"
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : 'auto'}
+          />
+        </div>
+        <div class="container hero-slide__inner">
+          <div class="hero-slide__content" data-reveal>
+            <span class="eyebrow eyebrow--light">{slide.eyebrow}</span>
+            <h1>{slide.title}</h1>
+            <p>{slide.copy}</p>
+            <div class="hero-slide__actions">
+              <a class="button button--light" href={slide.href}>
+                {slide.cta} <Icon name="arrow" size={18} />
+              </a>
+              <a class="button button--outline-light" href={slide.secondary}>
+                {slide.secondaryLabel}
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    ))
+  }
+  <div class="container hero-slider__panel">
+    <LocationSelector id="hero-location" label="Check inventory near" placement="top" />
+    <div class="hero-slider__controls" aria-label="Hero slider controls">
+      <button type="button" data-hero-prev aria-label="Previous slide"><Icon name="arrow" size={18} /></button>
+      <div class="hero-slider__dots">
+        {
+          slides.map((_, index) => (
+            <button
+              type="button"
+              data-hero-dot={index}
+              aria-label={`Go to slide ${index + 1}`}
+              aria-current={index === 0 ? 'true' : 'false'}
+            />
+          ))
+        }
+      </div>
+      <button type="button" data-hero-next aria-label="Next slide"><Icon name="arrow" size={18} /></button>
+    </div>
+  </div>
+</section>
+
+<script>
+  // @ts-nocheck
+  const slider = document.querySelector('[data-hero-slider]');
+  if (slider) {
+    const slides = [...slider.querySelectorAll('[data-hero-slide]')];
+    const dots = [...slider.querySelectorAll('[data-hero-dot]')];
+    const previous = slider.querySelector('[data-hero-prev]');
+    const next = slider.querySelector('[data-hero-next]');
+    let current = 0;
+    let timer;
+    const show = (index) => {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle('is-active', slideIndex === current);
+        slide.setAttribute('aria-hidden', String(slideIndex !== current));
+      });
+      dots.forEach((dot, dotIndex) => dot.setAttribute('aria-current', String(dotIndex === current)));
+    };
+    const restart = () => {
+      window.clearInterval(timer);
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+        timer = window.setInterval(() => show(current + 1), 7000);
+    };
+    previous?.addEventListener('click', () => {
+      show(current - 1);
+      restart();
+    });
+    next?.addEventListener('click', () => {
+      show(current + 1);
+      restart();
+    });
+    dots.forEach((dot, index) =>
+      dot.addEventListener('click', () => {
+        show(index);
+        restart();
+      }),
+    );
+    restart();
+  }
+</script>
