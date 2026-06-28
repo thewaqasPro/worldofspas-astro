@@ -9,3 +9,12 @@ content:
         type: string
       - name: body
         type: rich-text
+  - name: posts
+    label: Postss
+    type: collection
+    path: docs
+    fields:
+      - name: title
+        type: string
+      - name: body
+        type: rich-text
