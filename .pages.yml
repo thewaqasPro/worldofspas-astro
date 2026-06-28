@@ -10,7 +10,7 @@ content:
       - name: body
         type: rich-text
   - name: posts
-    label: Postss
+    label: Posts
     type: collection
     path: docs
     fields:
